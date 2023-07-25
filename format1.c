@@ -40,13 +40,12 @@ int flags, int width, int precision, int size)
 	UNUSED(precision);
 	UNUSED(size);
 
+	/*handle null pointer case*/
 	if (str == NULL)
 	{
 		str = "(null)";
-
-		if (precision >= 6)
-			str = " ";
 	}
+	/*calculate length of string*/
 	while (str[length] != '\0')
 		length++;
 	if (precision >= 0 && precision < length)
@@ -55,7 +54,7 @@ int flags, int width, int precision, int size)
 	{
 		if (flags & F_MINUS)
 		{
-			write(1, &str[0], length);
+			write(1, str, length);
 			for (i = width - length; i > 0; i--)
 				write(1, " ", 1);
 			return (width);
@@ -64,10 +63,11 @@ int flags, int width, int precision, int size)
 		{
 			for (i = width - length; i > 0; i--)
 				write(1, " ", 1);
-			write(1, &str[0], length);
+			write(1, str, length);
 			return (width);
 		}
 	}
+	/*no widtth padding needed, print string normally*/
 	return (write(1, str, length));
 }
 /************************* PRINT PERCENT SIGN *************************/
