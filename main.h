@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 #define UNUSED(x) (void)(x)
 #define BUFF_SIZE 1024
@@ -112,7 +113,7 @@ int length, char padd, char extra_c);
 int write_pointer(char buffer[], int ind, int length,
 int width, int flags, char padd, char extra_c, int padd_start);
 
-int write_unsgnd(int is_negative, int ind,
+int write_unsgn(int is_negative, int ind,
 char buffer[], int flags, int width, int precision, int size);
 
 /****************** UTILS ******************/
