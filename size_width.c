@@ -7,7 +7,7 @@
  *
  * Return: Precision.
  */
-int size(const char *format, int *i)
+int Size(const char *format, int *i)
 {
 	int cur = *i + 1;
 	int size = 0;
@@ -33,7 +33,7 @@ int size(const char *format, int *i)
  *
  * Return: width.
  */
-int width(const char *format, int *i, va_list list)
+int Width(const char *format, int *i, va_list list)
 {
 	int cur;
 	int width = 0;

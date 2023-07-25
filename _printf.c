@@ -34,9 +34,9 @@ else
 {
 print_buffer(buffer, &buff_ind);
 flags = flag(format, &i);
-width = width(format, &i, list);
+width = Width(format, &i, list);
 precision = precisions(format, &i, list);
-size = size(format, &i);
+size = Size(format, &i);
 ++i;
 printed = handle_print(format, &i, list, buffer,
 flags, width, precision, size);

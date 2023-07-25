@@ -88,9 +88,9 @@ int flags, int width, int precision, int size);
 
 /* Functions to handle other specifiers */
 int flag(const char *format, int *i);
-int get_width(const char *format, int *i, va_list list);
+int Width(const char *format, int *i, va_list list);
 int precisions(const char *format, int *i, va_list list);
-int get_size(const char *format, int *i);
+int Size(const char *format, int *i);
 
 /*Function to print string in reverse*/
 int print_reverse(va_list types, char buffer[],
