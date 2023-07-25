@@ -16,27 +16,25 @@ int print_pointer(va_list types, char buffer[],
 {
 	char extra_c = 0, padd = ' ';
 	int ind = BUFF_SIZE - 2, length = 2, padd_start = 1; /* length=2, for '0x' */
-	unsigned long num_addr;
+	unsigned long num_addrs;
 	char map_to[] = "0123456789abcdef";
-
-	/* Gets the pointer value from the va_list object */
-	void *addr = va_arg(types, void *);
+	void *addrs = va_arg(types, void *);
 
 	UNUSED(width);
 	UNUSED(size);
-	/* check if addr is NULL */
-	if (addr == NULL)
+
+	if (addrs == NULL)
 		return (write(1, "(nil)", 5));
 
 	buffer[BUFF_SIZE - 1] = '\0';
 	UNUSED(precision);
 
-	num_addr = (unsigned long)addr;
-	/* loop through the type casted addr & convert to HEX */
-	while (num_addr > 0)
+	num_addrs = (unsigned long)addrs;
+
+	while (num_addrs > 0)
 	{
-		buffer[ind--] = map_to[num_addr % 16];
-		num_addr /= 16;
+		buffer[ind--] = map_to[num_addrs % 16];
+		num_addrs /= 16;
 		length++;
 	}
 
@@ -69,23 +67,22 @@ int print_non_printable(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
 	int i = 0, offset = 0;
-	/* get the passed string from the va_list object*/
-	char *s = va_arg(types, char *);
+	char *str = va_arg(types, char *);
 
 	UNUSED(flags);
 	UNUSED(width);
 	UNUSED(precision);
 	UNUSED(size);
 
-	if (s == NULL)
+	if (str == NULL)
 		return (write(1, "(null)", 6));
-	/* loop through the string to print the printable or convert ch to HEX */
-	while (s[i] != '\0')
+
+	while (str[i] != '\0')
 	{
-		if (is_printable(s[i]))
-			buffer[i + offset] = s[i];
+		if (is_printable(str[i]))
+			buffer[i + offset] = str[i];
 		else
-			offset += append_hexa_code(s[i], buffer, i + offset);
+			offset += append_hexa_code(str[i], buffer, i + offset);
 
 		i++;
 	}
@@ -98,7 +95,7 @@ int print_non_printable(va_list types, char buffer[],
 /************************* PRINT REVERSE *************************/
 /**
  * print_reverse - Prints reverse string.
- * @types: List of arguments
+ * @types: Lista of arguments
  * @buffer: Buffer array to handle print
  * @flags:  Calculates active flags
  * @width: get width
@@ -110,7 +107,7 @@ int print_non_printable(va_list types, char buffer[],
 int print_reverse(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	char *s;
+	char *str;
 	int i, count = 0;
 
 	UNUSED(buffer);
@@ -118,22 +115,20 @@ int print_reverse(va_list types, char buffer[],
 	UNUSED(width);
 	UNUSED(size);
 
-	/* get the passed string from va_list object */
-	s = va_arg(types, char *);
+	str = va_arg(types, char *);
 
-	if (s == NULL)
+	if (str == NULL)
 	{
 		UNUSED(precision);
 
-		s = "(Null)";
+		str = ")Null(";
 	}
-	/* get the length of the string */
-	for (i = 0; s; i++)
+	for (i = 0; str[i]; i++)
 		;
-	/* loop through to reverse the string */
+
 	for (i = i - 1; i >= 0; i--)
 	{
-		char z = s[i];
+		char z = str[i];
 
 		write(1, &z, 1);
 		count++;
@@ -143,7 +138,7 @@ int print_reverse(va_list types, char buffer[],
 /************************* PRINT A STRING IN ROT13 *************************/
 /**
  * print_rot13string - Print a string in rot13.
- * @types: Lista of arguments
+ * @types: List of arguments
  * @buffer: Buffer array to handle print
  * @flags:  Calculates active flags
  * @width: get width
@@ -155,40 +150,39 @@ int print_rot13string(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
 	char x;
-	char *s;
+	char *str;
 	unsigned int i, j;
 	int count = 0;
-	char o[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	char r[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
+	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	char out[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
 
-	s = va_arg(types, char *);
+	str = va_arg(types, char *);
 	UNUSED(buffer);
 	UNUSED(flags);
 	UNUSED(width);
 	UNUSED(precision);
 	UNUSED(size);
 
-	if (s == NULL)
-		s = "(AHYY)";
-	for (i = 0; s[i]; i++)
+	if (str == NULL)
+		str = "(AHYY)";
+	for (i = 0; str[i]; i++)
 	{
-		for (j = 0; o[j]; j++)
+		for (j = 0; in[j]; j++)
 		{
-			if (r[j] == s[i])
+			if (in[j] == str[i])
 			{
-				x = r[j];
+				x = out[j];
 				write(1, &x, 1);
 				count++;
 				break;
 			}
 		}
-		if (!o[j])
+		if (!in[j])
 		{
-			x = s[i];
+			x = str[i];
 			write(1, &x, 1);
 			count++;
 		}
 	}
 	return (count);
 }
-
