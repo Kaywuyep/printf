@@ -31,46 +31,44 @@ int flags, int width, int precision, int size)
 int print_string(va_list types, char buffer[],
 int flags, int width, int precision, int size)
 {
-	int length = 0, padding;
-	char padChar;
+	int length = 0, i;
 	char *str = va_arg(types, char *);
 
 	UNUSED(buffer);
 	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
 	UNUSED(size);
-
-	if (str == NULL)/*handle null pointer case*/
+	if (str == NULL)
 	{
-		return (write(1, "(null)", 6));
+		str = "(null)";
+		if (precision >= 6)
+			str = "      ";
 	}
-	/*calculate the actual length of the string*/
+	/*calculate actual length of string*/
 	while (str[length] != '\0')
 		length++;
 	if (precision >= 0 && precision < length)/*apply precision*/
 		length = precision;
-	if (width > length)/*apply width padding if necessary*/
+	if (width > length)/*apply width padding where necessary*/
 	{
-		padding = width - length;
-		padChar = ' ';
-		if (flags & 1)/*left padding (default)*/
+		if (flags & F_MINUS)
 		{
-			write(1, str, length);
-			while (padding--)
-				write(1, &padChar, 1);
+			write(1, &str[0], length);
+			for (i = width - length; i > 0; i--)
+				write(1, " ", 1);
+			return (width);
 		}
-		else/*right padding*/
+		else
 		{
-			while (padding--)
-				write(1, &padChar, 1);
-			write(1, str, length);
+			for (i = width - length; i > 0; i--)
+				write(1, " ", 1);
+			write(1, &str[0], length);
+			return (width);
 		}
 	}
-	else
-	{
-		/*no widtth padding needed, print string normally*/
-		(write(1, str, length));
-	}
-	return (length);
+	/*no width padding needed, print string normally*/
+	return (write(1, str, length));
 }
 /************************* PRINT PERCENT SIGN *************************/
 /**
@@ -106,7 +104,7 @@ int flags, int width, int precision, int size)
  * Return: Number of chars printed
  */
 int print_int(va_list types, char buffer[],
-int flags, int width, int precision, int size)
+		int flags, int width, int precision, int size)
 {
 	int i = BUFF_SIZE - 2;
 	int is_negative = 0;
