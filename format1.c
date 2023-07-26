@@ -29,9 +29,9 @@ int flags, int width, int precision, int size)
  * Return: Number of chars printed
  */
 int print_string(va_list types, char buffer[],
-int flags, int width, int precision, int size)
+	int flags, int width, int precision, int size)
 {
-	int length = 0;
+	int length = 0, i;
 	char *str = va_arg(types, char *);
 
 	UNUSED(buffer);
@@ -41,12 +41,35 @@ int flags, int width, int precision, int size)
 	UNUSED(size);
 	if (str == NULL)
 	{
-		return (write(1, "(null)", 6));
+		str = "(null)";
+		if (precision >= 6)
+			str = "      ";
 	}
-	/*calculate actual length of string*/
+
 	while (str[length] != '\0')
 		length++;
-	/*no width padding needed, print string normally*/
+
+	if (precision >= 0 && precision < length)
+		length = precision;
+
+	if (width > length)
+	{
+		if (flags & F_MINUS)
+		{
+			write(1, &str[0], length);
+			for (i = width - length; i > 0; i--)
+				write(1, " ", 1);
+			return (width);
+		}
+		else
+		{
+			for (i = width - length; i > 0; i--)
+				write(1, " ", 1);
+			write(1, &str[0], length);
+			return (width);
+		}
+	}
+
 	return (write(1, str, length));
 }
 /************************* PRINT PERCENT SIGN *************************/
