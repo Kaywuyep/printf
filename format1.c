@@ -40,17 +40,18 @@ int print_string(va_list types, char buffer[],
 	if (str == NULL)/*handle NULL pointr*/
 	{
 		str = "(null)";
+		if (precision >= 6)
+			str = "      ";/*padding with 6 spaces*/
 	}
 	/*calculate length of string*/
 	while (str[length] != '\0')
 		length++;
 	/*handle cases with specified precision*/
-	if (precision >= 6)
-		str = "      ";/*padding with 6 spaces*/
-	else if (precision >= 0 && precision < length)
+	if (precision >= 0 && precision < length)
 		length = precision;
 	else if (precision == 0)/*for "%.0s" case*/
 		length = 0;
+
 	if (width > length)/*handle width padding*/
 	{
 		if (flags & F_MINUS)
