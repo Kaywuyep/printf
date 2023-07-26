@@ -31,7 +31,7 @@ int flags, int width, int precision, int size)
 int print_string(va_list types, char buffer[],
 int flags, int width, int precision, int size)
 {
-	int length = 0, i;
+	int length = 0;
 	char *str = va_arg(types, char *);
 
 	UNUSED(buffer);
@@ -41,32 +41,11 @@ int flags, int width, int precision, int size)
 	UNUSED(size);
 	if (str == NULL)
 	{
-		str = "(null)";
-		if (precision >= 6)
-			str = "      ";
+		return (write(1, "(null)", 6));
 	}
 	/*calculate actual length of string*/
 	while (str[length] != '\0')
 		length++;
-	if (precision >= 0 && precision < length)/*apply precision*/
-		length = precision;
-	if (width > length)/*apply width padding where necessary*/
-	{
-		if (flags & F_MINUS)
-		{
-			write(1, &str[0], length);
-			for (i = width - length; i > 0; i--)
-				write(1, " ", 1);
-			return (width);
-		}
-		else
-		{
-			for (i = width - length; i > 0; i--)
-				write(1, " ", 1);
-			write(1, &str[0], length);
-			return (width);
-		}
-	}
 	/*no width padding needed, print string normally*/
 	return (write(1, str, length));
 }
