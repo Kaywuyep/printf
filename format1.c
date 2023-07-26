@@ -42,10 +42,8 @@ int print_string(va_list types, char buffer[],
 	if (str == NULL)
 	{
 		str = "(null)";
-		if (precision >= 6)
-			str = "      ";
 	}
-
+	/*calculate length of string*/
 	while (str[length] != '\0')
 		length++;
 
@@ -69,7 +67,7 @@ int print_string(va_list types, char buffer[],
 			return (width);
 		}
 	}
-
+	/*no width padding, print string normally*/
 	return (write(1, str, length));
 }
 /************************* PRINT PERCENT SIGN *************************/
