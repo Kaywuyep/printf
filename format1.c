@@ -31,24 +31,46 @@ int flags, int width, int precision, int size)
 int print_string(va_list types, char buffer[],
 int flags, int width, int precision, int size)
 {
-	int length = 0;
+	int length = 0, padding;
+	char padChar;
 	char *str = va_arg(types, char *);
 
 	UNUSED(buffer);
 	UNUSED(flags);
-	UNUSED(width);
-	UNUSED(precision);
 	UNUSED(size);
 
-	/*handle null pointer case*/
-	if (str == NULL)
+	if (str == NULL)/*handle null pointer case*/
 	{
 		return (write(1, "(null)", 6));
 	}
+	/*calculate the actual length of the string*/
 	while (str[length] != '\0')
 		length++;
-	/*no widtth padding needed, print string normally*/
-	return (write(1, str, length));
+	if (precision >= 0 && precision < length)/*apply precision*/
+		length = precision;
+	if (width > length)/*apply width padding if necessary*/
+	{
+		padding = width - length;
+		padChar = ' ';
+		if (flags & 1)/*left padding (default)*/
+		{
+			write(1, str, length);
+			while (padding--)
+				write(1, &padChar, 1);
+		}
+		else/*right padding*/
+		{
+			while (padding--)
+				write(1, &padChar, 1);
+			write(1, str, length);
+		}
+	}
+	else
+	{
+		/*no widtth padding needed, print string normally*/
+		(write(1, str, length));
+	}
+	return (length);
 }
 /************************* PRINT PERCENT SIGN *************************/
 /**
