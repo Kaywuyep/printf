@@ -36,10 +36,8 @@ int print_string(va_list types, char buffer[],
 
 	UNUSED(buffer);
 	UNUSED(flags);
-	UNUSED(width);
-	UNUSED(precision);
 	UNUSED(size);
-	if (str == NULL)
+	if (str == NULL)/*handle NULL pointr*/
 	{
 		str = "(null)";
 	}
@@ -49,8 +47,10 @@ int print_string(va_list types, char buffer[],
 
 	if (precision >= 0 && precision < length)
 		length = precision;
+	else if (precision == 0)/*for "%.0s" case*/
+		length = 0;
 
-	if (width > length)
+	if (width > length)/*handle width padding*/
 	{
 		if (flags & F_MINUS)
 		{
@@ -67,7 +67,7 @@ int print_string(va_list types, char buffer[],
 			return (width);
 		}
 	}
-	/*no width padding, print string normally*/
+	/*no width padding needed, print string normally*/
 	return (write(1, str, length));
 }
 /************************* PRINT PERCENT SIGN *************************/
