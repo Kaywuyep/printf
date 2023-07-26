@@ -34,14 +34,14 @@ int print_string(va_list types, char buffer[],
 	int length = 0, i;
 	char *str = va_arg(types, char *);
 
-	UNUSED(buffer);
 	UNUSED(flags);
+	UNUSED(buffer);
 	UNUSED(size);
 	if (str == NULL)/*handle NULL pointr*/
 	{
 		str = "(null)";
 		if (precision >= 6)
-			str = "      ";/*padding with 6 spaces*/
+			str = "      ";/*padding with spaces*/
 	}
 	/*calculate length of string*/
 	while (str[length] != '\0')
@@ -49,7 +49,7 @@ int print_string(va_list types, char buffer[],
 	/*handle cases with specified precision*/
 	if (precision >= 0 && precision < length)
 		length = precision;
-	else if (precision == 0)/*for "%.0s" case*/
+	else if (precision == 0)/*for "%.0s" and "%.*s"case*/
 		length = 0;
 
 	if (width > length)/*handle width padding*/
